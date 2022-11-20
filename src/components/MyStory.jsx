@@ -15,7 +15,7 @@ const MyStory = ()=>{
     return <div style={{width:"80%",color:"white",marginLeft:"10%"}}>
         <div style={{display:"flex",flexDirection:"row",alignItems:"center"}}>
         <a href ="/homepage" style={{backgroundColor:"#ba68c8",display:"block",width:"150px",textAlign:"center",padding:"20px",borderRadius:"25px",marginRight:"30px"}}><b> Back home</b></a>
-            <h1>Our best features!</h1>
+            <h1>Nuestras funcionalidades!</h1>
         </div>
         <div style={{display:"flex",flexDirection:"row",overflow:"scroll"}}>
         {segment("Compra para principiantes ","La compra para principiantes consiste en dar recomendaciones de CPU según el uso que le quiere dar el usuario, incluyendo una tabla de sus componentes con sus respectivos precios. ","f1")}
