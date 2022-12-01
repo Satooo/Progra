@@ -9,6 +9,7 @@ import { allItems, graphicItems,processorItems, powersupplyItems, coolerItems,
     codingComponentes, officeComponents, renderingComponents, otherComponents,
     possibleCheckoutItems} from "./models/dataScript";
 import { useEffect } from "react";
+import { RUTA_BACKEND } from "../conf";
 
 const Ranking = () => {
     const [listadoRankingp,setlistadoRankingp]=useState([]);
