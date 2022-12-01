@@ -8,11 +8,43 @@ import { allItems, graphicItems,processorItems, powersupplyItems, coolerItems,
     windowsItems,storageItems, memoryItems,gamingComponents, designComponents,
     codingComponentes, officeComponents, renderingComponents, otherComponents,
     possibleCheckoutItems} from "./models/dataScript";
+import { useEffect } from "react";
 
-const Ranking = () =>{
+const Ranking = () => {
+    const [listadoRankingp,setlistadoRankingp]=useState([]);
     const [selected,setSelected]=useState(0);
     const [pc,setPC]=useState(0);
-    console.log(pc);
+    //console.log(pc);
+
+    const httpObtenerRankingp = async () => {
+        const resp = await fetch(`http://localhost:9999/rankingp`);
+        const data = await resp.json();
+        setlistadoRankingp(data);
+    }
+
+    useEffect(()=>{
+        httpObtenerRankingp()
+    },[])
+    
+    const getRankingpURL = ()=>{
+        return listadoRankingp.map((_,index)=>{
+            return listadoRankingp[index].url})
+    }
+
+    const getRankingpNombres = ()=>{
+        return listadoRankingp.map((_,index)=>{
+            return listadoRankingp[index].Nombre})
+    }
+
+    const getRankingpPrecio = ()=>{
+        return listadoRankingp.map((_,index)=>{
+            return listadoRankingp[index].Precio})
+    }
+
+    //console.log(getRankingpURL());
+    //console.log(getRankingpNombres());
+    //console.log(getRankingpPrecio());
+
     const MonsterPc=[3,3,3,2,3,2,1];
 
     const CruiserPc=[1,3,2,1,3,2,0];
@@ -21,13 +53,19 @@ const Ranking = () =>{
 
     const BudgetPC=[1,1,1,0,1,1,0];
 
-    const rankingCard = (img,name,price) =>{
-       return <div id="rankingCard">
-            <img src={img}/>
-            <h2>{name}</h2>
-            <b>${price}</b>
-        </div>
+    const LeaderboardPerifericos = (url, nombre, precio) =>{
+        const rankingCard = Array(listadoRankingp.length).fill(0).map((_,index)=>{
+            return<div id="rankingCard">
+                <img src={url[index]}/>
+                <h2>{nombre[index]}</h2>
+                <b>${precio[index]}</b>
+            </div>
+        })
+        return <div>
+            {rankingCard}
+        </div>;
     }
+
     const getPrice = (temp)=>{
         let price=0;
        Array(temp.length).fill(0).map((_,index)=>{
@@ -37,7 +75,7 @@ const Ranking = () =>{
     }
     const buildsComponents = (temp)=>{
         const component=Array(temp.length).fill(0).map((_,index)=>{
-            console.log(allItems[index][temp[index]].name);
+            //console.log(allItems[index][temp[index]].name);
             return <div className="inline" id="buildsComponents">
             <img src={allItems[index][temp[index]].img}/>
             <b>{allItems[index][temp[index]].name}</b>
@@ -62,12 +100,7 @@ const Ranking = () =>{
     const showContent=(selected)=>{
         switch(selected){
             case 0:
-                return <div>
-            {rankingCard("/images/headset.png","Headset","20")}
-            {rankingCard("/images/keyboard.png","Mouse & keyboard","39")}
-            {rankingCard("/images/mousepad.png","Standard mouse pad","19")}
-            {rankingCard('/images/mousepad2.png',"XL mouse pad","29")}
-            </div>
+                return LeaderboardPerifericos(getRankingpURL(), getRankingpNombres(), getRankingpPrecio());
             case 1:
                 return builds();
         }
