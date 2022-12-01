@@ -1,5 +1,7 @@
 import { BrowserRouter,Route,Routes } from "react-router-dom";
 import React, { useState } from "react";
+import { useEffect } from "react";
+import { RUTA_BACKEND } from "../conf";
 
 const Support = ()=>{
     const [selection,setSelection]=useState("hub");
@@ -106,24 +108,132 @@ const Support = ()=>{
             </div>
         </div>
     }
+
+const [Correo,setCorreo]=useState("")
+const [Nombre,setNombre]=useState("")
+const [Asunto,setAsunto]=useState("")
+const [Descripcion,setDescripcion]=useState("")
+const [Telefono,setTelefono]=useState("")
+const [Enviar,setEnviar]=useState(false)
+const [ListaReporte,setListaReporte]=useState([])
+const [listadoReportes,setListadoReportes]=useState([])
+const usuarioCorreo = localStorage.getItem("Usuario_correo")
+const [Usuario,setUsuario]=useState([])
+let tempReporte=[]
+
+    const httpEnviarReporte = async (list,userid) => {
+      const doc ={
+        list:{list},
+        userid:userid
+      }
+      //await fetch(`http://localhost:9999/reporte`,{
+        await fetch(`${RUTA_BACKEND}reporte`,{ 
+        method: 'POST',
+        body: JSON.stringify(doc),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      })
+    }
+
+    const httpObtenerUsuario = async ()=>{
+        //const resp = await fetch(`http://localhost:9999/usuario?correo=${usuarioCorreo}`)
+        const resp = await fetch(`${RUTA_BACKEND}usuario?correo=${usuarioCorreo}`)
+        const data = await resp.json()
+        setUsuario(data[0])
+    }
+    const httpObtenerReportes = async ()=>{
+        //const resp = await fetch(`http://localhost:9999/usuario?correo=${usuarioCorreo}`)
+        const resp = await fetch(`${RUTA_BACKEND}reporte`)
+        const data = await resp.json()
+        setListadoReportes(data)
+    }
+
+    useEffect(()=>{
+      
+        httpObtenerUsuario()
+        httpObtenerReportes()
+        httpEnviarReporte(ListaReporte,Usuario.Usuario_id)
+        
+
+        
+      
+      
+    },[ListaReporte])
+
     const submit =() =>{
         return<div id="content-support">
-            <h1>Submit request</h1>
+            <div><h1>Submit request</h1>
+            <button onClick={()=>{setSelection("quejas")}} style={{color:"purple",backgroundColor:"white",padding:"10px",borderRadius:"15px",marginTop:"20px"}} id="supportforum"><b>Support forum </b></button>
+            </div>
+            
             <div id="content-support-submit" className="mt-5">
                 <p>Email</p>
-                <input />
+                <input placeholder={Usuario.Correo} value={ Correo }
+                            onChange={ (evt) => {
+                                setCorreo(evt.target.value)}} disabled="disabled"/>
                 <p>Name</p>
-                <input />
+                <input placeholder={Usuario.Nombre} value={ Nombre }
+                            onChange={ (evt) => {
+                                setNombre(evt.target.value)}} disabled="disabled"/>
                 <p>Phone</p>
-                <input />
+                <input  placeholder={Usuario.Telefono} value={ Telefono }
+                            onChange={ (evt) => {
+                                setTelefono(evt.target.value)}} disabled="disabled"/>
                 <p>Subject</p>
-                <input/>
+                <input value={ Asunto }
+                            onChange={ (evt) => {
+                                setAsunto(evt.target.value)}}/>
                 <p>Description</p>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                
+                <textarea value= { Descripcion}
+                            onChange={ (evt) => {
+                                setDescripcion(evt.target.value)}} class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                 <p></p>
-                <button>Submit</button>
+                <button onClick={()=>{
+                    
+                    
+                    httpObtenerUsuario()
+                    setListaReporte([Usuario.Correo, Usuario.Nombre, Usuario.Telefono, Descripcion, Asunto])
+                    alert("Se envio el request!")
+                }}>Submit </button>
+    
             </div>
         </div>
+    
+    }
+    const quejas = ()=>{
+        if(listadoReportes.length>0){
+            return <div id="content-support">
+                <div>
+                    <button onClick={()=>{setSelection("submit")}} style={{color:"white"}}>Back</button>
+                    <h1>Support forum</h1>
+                </div>
+            <div style={{width:"80%",marginRight:"auto",marginLeft:"auto",marginTop:"50px"}}>
+            {Array(listadoReportes.length).fill(0).map((_,index)=>{
+                return <div style={{backgroundColor:"white",marginBottom:"20px",borderRadius:"15px",color:"black",padding:"20px"}}>
+                    <p style={{color:"gray"}}><i>{listadoReportes[index].Correo}</i></p>
+                    <p><b>Usuario  </b>
+                    {listadoReportes[index].Nombre}</p>
+                    <p><b>Asunto</b></p>
+                    <p>{listadoReportes[index].Asunto}</p>
+                    <p><b>Descripcion</b></p>
+                    <p>{listadoReportes[index].Descripcion}</p>
+                </div>
+            })}
+            <p id="space-forum">.</p>
+            </div>
+            </div>
+        }else{
+            return <div id="content-support">
+                <div>
+                <button onClick={()=>{setSelection("submit")}} style={{color:"white"}}>Back</button>
+                <h1>Support forum</h1>
+                </div>
+            <div style={{width:"80%",marginRight:"auto",marginLeft:"auto",marginTop:"50px"}}>
+                <h2>No hay reportes aún.. </h2>
+            </div>
+            </div>
+        }
+        
     }
 
     const content = (selection) =>{
@@ -136,6 +246,8 @@ const Support = ()=>{
                 return faq();
             case "submit":
                 return submit();
+            case "quejas":
+                return quejas();
         }
     }
 

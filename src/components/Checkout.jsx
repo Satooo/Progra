@@ -4,10 +4,71 @@ import { allItems, graphicItems,processorItems, powersupplyItems, coolerItems,
   codingComponentes, officeComponents, renderingComponents, otherComponents,
   possibleCheckoutItems} from "./models/dataScript";
 import { useState } from "react";
+import { useEffect } from "react";
+import { RUTA_BACKEND } from "../conf";
 
 const Checkout = ()=>{
     const [star,setStar]=useState(0);
     const [done,setDone]=useState(false);
+    const [comentario,setComentario]=useState("")
+    const [fin,setFin]=useState(false)
+
+    const usuarioCorreo = localStorage.getItem("Usuario_correo")
+    const [Usuario,setUsuario]=useState([])
+
+    const httpObtenerUsuario = async ()=>{
+      //const resp = await fetch(`http://localhost:9999/usuario?correo=${usuarioCorreo}`)
+      const resp = await fetch(`${RUTA_BACKEND}usuario?correo=${usuarioCorreo}`)
+      const data = await resp.json()
+      setUsuario(data[0])
+  }
+
+
+    const [listadoProductos,setListadoProductos]=useState([])
+
+    const httpEnviarProductos = async (list,userid) => {
+      const doc ={
+        possibleCheckoutItems:{list},
+        userid:userid
+      }
+      //await fetch(`http://localhost:9999/orden`,{
+      await fetch(`${RUTA_BACKEND}orden`,{
+        method: 'POST',
+        body: JSON.stringify(doc),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      })
+    }
+    const [listaResena,setListaResena]=useState([])
+
+    const httpEnviarResena = async (list,userid) => {
+      const doc ={
+        list:{list},
+        userid
+      }
+      //await fetch(`http://localhost:9999/resena`,{
+      await fetch(`${RUTA_BACKEND}resena`,{
+        method: 'POST',
+        body: JSON.stringify(doc),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      })
+      window.location.href="http://localhost:3000/homepage";
+    }
+
+
+    useEffect(()=>{
+      httpObtenerUsuario()
+      if(done==true && fin==false){
+        httpObtenerUsuario()
+        httpEnviarProductos(possibleCheckoutItems,Usuario.Usuario_id)
+      }
+      if(done==true && fin==true){
+        console.log("se acabo")
+        httpEnviarResena(listaResena,Usuario.Usuario_id)
+        
+      }
+      
+    },[done,fin])
+
     let possibleCheckoutItems;
     if(localStorage.getItem("possibleCheckoutItems")!=null){
       possibleCheckoutItems=JSON.parse(localStorage.getItem("possibleCheckoutItems"));
@@ -43,8 +104,13 @@ const Checkout = ()=>{
         }
     }
     const deleteItems = ()=>{
+      setListaResena([star,comentario,"","","usuario"])
       localStorage.removeItem("possibleCheckoutItems");
+      setFin(true)
     }
+
+    
+
   const thankCard = () =>{
     if(possibleCheckoutItems.length>0){
     return <div id="thankCard" style={{display:done==true?"flex":"none"}}>
@@ -59,8 +125,8 @@ const Checkout = ()=>{
         <button onClick={()=>{setStar(5)}}><img src={star>=5?"/icons/star-filled.png":"/icons/star-unfilled.png"}  id="thankCardstar"/></button>
       </div>
       <p><b>Leave us a comment</b></p>
-      <textarea placeholder="optional"></textarea>
-      <a href="/homepage"><button id="thankCardbutton" onClick={()=>{deleteItems()}}>Submit</button></a>
+      <textarea placeholder="optional" value={ comentario } onChange={ (evt) => {setComentario(evt.target.value)}} ></textarea>
+      <button id="thankCardbutton" onClick={()=>{deleteItems()}}>Submit</button>
     </div>
     }
   }

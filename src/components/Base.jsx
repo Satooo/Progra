@@ -23,6 +23,7 @@ import { allItems, graphicItems,processorItems, powersupplyItems, coolerItems,
     codingComponentes, officeComponents, renderingComponents, otherComponents,
     possibleCheckoutItems} from "./models/dataScript";
 import MyStory from "./MyStory";
+import { RUTA_BACKEND } from "../conf";
 
 const Base = (props) =>{
     const [selected, setSelected] = React.useState(0);
@@ -41,7 +42,7 @@ const Base = (props) =>{
     const [listadoAllProductos,setListadoAllProductos]=useState([])
 
     const httpObtenerProductos = async () => {
-        const resp = await fetch(`http://localhost:9999/producto`)
+        const resp = await fetch(`${RUTA_BACKEND}producto`)
         const data = await resp.json()
         setListadoAllProductos(data)
     }
@@ -66,16 +67,16 @@ const Base = (props) =>{
             httpObtenerProductos()
         }}
         console.log("Search message inside useEffect: ", message);
-        setXpos(-1);
-           setYpos(-1);
-            for(let i=0;i<allItems.length;i++){
-                for(let j=0;j<allItems[i].length;j++){
-                    if(allItems[i][j].name==message){
-                        setXpos(i);
-                        setYpos(j);
-                   }
-                }
-            }
+        //setXpos(-1);
+        //   setYpos(-1);
+        //    for(let i=0;i<allItems.length;i++){
+        //        for(let j=0;j<allItems[i].length;j++){
+        //            if(allItems[i][j].name==message){
+        //                setXpos(i);
+        //                setYpos(j);
+        //           }
+        //        }
+        //    }
         setPosition(-1)
         for(let i=0;i<listadoAllProductos.length;i++){
             if(listadoAllProductos[i].Nombre==message){
@@ -84,9 +85,7 @@ const Base = (props) =>{
         }
     }, [message]);
 
-
     const searchBar= ()=>{
-        
         const handleChange = event => {
             setMessage(event.target.value);
             console.log(message);
@@ -94,10 +93,16 @@ const Base = (props) =>{
         let possibleSearch={};
         possibleSearch.img="";
         possibleSearch.name="";
-        if(xpos>-1 && ypos>-1){
-            possibleSearch.img=allItems[xpos][ypos].img;
-            possibleSearch.name=allItems[xpos][ypos].name;
+        //if(xpos>-1 && ypos>-1){
+            //possibleSearch.img=allItems[xpos][ypos].img;
+            //possibleSearch.name=allItems[xpos][ypos].name;
+            //possibleSearch.name=listadoAllProductos[position].Nombre;
+        //}
+        if(position>-1){
+            possibleSearch.img=imageLink(listadoAllProductos[position].Categoria);
+            possibleSearch.name=listadoAllProductos[position].Nombre;
         }
+
         return <div id="searchbar" style={{display:isActive==true ? "flex":"none"}}>
             
             <a href={message!=""?"/Search":""} ><button onClick={()=>{
@@ -114,13 +119,38 @@ const Base = (props) =>{
             <div className="inline">
             <img src={possibleSearch.img}/>
             <b>{possibleSearch.name}</b>
-            <p style={{display:xpos==-1?"flex":"none"}}>Searching... &#128270;</p>
+            <p style={{display:position==-1?"flex":"none"}}>Searching... &#128270;</p>
             </div>
-            <p style={{display:message.length>0&&xpos==-1?"flex":"none"}}>{message}</p>
-            <p style={{display:xpos>-1?"flex":"none"}} id="searchPopupLine">press  search  to find details</p>
+            <p style={{display:message.length>0&&position==-1?"flex":"none"}}>{message}</p>
+            <p style={{display:position>-1?"flex":"none"}} id="searchPopupLine">press  search  to find details</p>
             </div>
         </div>
     }
+
+    const imageLink = (selection)=>{
+        switch(selection){
+          case "Graficas":
+              return  "images/graphic.png";
+      
+          case "Procesador":
+              return "images/processor.png";
+      
+          case "Memoria":
+            return "images/memory.png";
+      
+          case "Almacenamiento":
+            return "images/storage.png";
+      
+          case "Cooler":
+            return "images/cooler.png";
+      
+          case "Windows":
+            return "images/windows.png";
+            
+          case "Power":
+            return "images/power.png";
+        }
+      }
 
     const onItemSelected=(emoji)=>{
         setClick(emoji);

@@ -5,6 +5,7 @@ import { allItems, graphicItems,processorItems, powersupplyItems, coolerItems,
   possibleCheckoutItems} from "./models/dataScript";
 import { useState } from "react";
 import { useEffect } from "react";
+import { RUTA_BACKEND } from "../conf";
 
 
 
@@ -21,7 +22,8 @@ const AdvancedOptions = (props) => {
 
 
   const httpObtenerProductos = async (categoria) => {
-    const resp = await fetch(`http://localhost:9999/producto?categoria=${categoria}`)
+    //const resp = await fetch(`http://localhost:9999/producto?categoria=${categoria}`)
+    const resp = await fetch(`${RUTA_BACKEND}producto?categoria=${categoria}`)
     const data = await resp.json()
     setListadoProductos(data)
   }
@@ -185,24 +187,24 @@ const AdvancedOptions = (props) => {
       <div className="col-5" id="mobile-advanced-head">
           <div className="row">
               <div className="col-3">
-                  <button className="content-advanced-categories-grid-col" id="graphicButton" onClick={()=>{setSelection("graphics"),setCategoria("Graficas")}}>Graphics</button>
+                  <button className="content-advanced-categories-grid-col" id="graphicButton" onClick={()=>{setCategoria("Graficas")}}>Graphics</button>
               </div>
               <div className="col-3">
-                  <button className="content-advanced-categories-grid-col" id="processorButton" onClick={()=>{setSelection("processor"),setCategoria("Procesador")}}>Processor</button>
+                  <button className="content-advanced-categories-grid-col" id="processorButton" onClick={()=>{setCategoria("Procesador")}}>Processor</button>
               </div>
               <div className="col-3">
-                  <button className="content-advanced-categories-grid-col" id="memoryButton" onClick={()=>{setSelection("memory"),setCategoria("Memoria")}}>Memory</button>
+                  <button className="content-advanced-categories-grid-col" id="memoryButton" onClick={()=>{setCategoria("Memoria")}}>Memory</button>
               </div>
               <div className="col-3">
-                  <button className="content-advanced-categories-grid-col" id="storageButton" onClick={()=>{setSelection("storage"),setCategoria("Almacenamiento")}}>Storage</button>
+                  <button className="content-advanced-categories-grid-col" id="storageButton" onClick={()=>{setCategoria("Almacenamiento")}}>Storage</button>
               </div>
           </div>
           <div className="row" style={{marginTop:"20px"}}>
               <div className="col-4">
-                  <button className="content-advanced-categories-grid-col" id="coolerButton" onClick={()=>{setSelection("cooler"),setCategoria("Cooler")}}>Cooler</button>
+                  <button className="content-advanced-categories-grid-col" id="coolerButton" onClick={()=>{setCategoria("Cooler")}}>Cooler</button>
               </div>
               <div className="col-4">
-                  <button className="content-advanced-categories-grid-col" id="windowsButton" onClick={()=>{setSelection("windows"),setCategoria("Windows")}}>Windows</button>
+                  <button className="content-advanced-categories-grid-col" id="windowsButton" onClick={()=>{setCategoria("Windows")}}>Windows</button>
               </div>
               <div className="col-4">
                   <button className="content-advanced-categories-grid-col" id="powerButton" onClick={()=>{setCategoria("Power")}}>Power supply</button>

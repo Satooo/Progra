@@ -9,6 +9,7 @@ import { allItems, graphicItems,processorItems, powersupplyItems, coolerItems,
     windowsItems,storageItems, memoryItems,gamingComponents, designComponents,
     codingComponentes, officeComponents, renderingComponents, otherComponents,
     possibleCheckoutItems} from "./models/dataScript";
+import { RUTA_BACKEND } from "../conf";
 
 
 
@@ -23,7 +24,8 @@ const BeginnerRecommendation =()=>{
     const [listadoProductosFiltrado,setListadoProductosFiltrado]=useState([])
 
     const httpObtenerProductos = async (tipo) => {
-        const resp = await fetch(`http://localhost:9999/armados?tipo=${tipo}`)
+        //const resp = await fetch(`http://localhost:9999/armados?tipo=${tipo}`)
+        const resp = await fetch(`${RUTA_BACKEND}armados?tipo=${tipo}`)
         const data = await resp.json()
         setListadoProductos(data)
     }
@@ -60,7 +62,35 @@ const BeginnerRecommendation =()=>{
         return listadoProductos.map((_,index)=>{
             return listadoProductos[index].Producto.Precio})
     }
-    
+
+    const getProductosCategoria = ()=>{
+        return listadoProductos.map((_,index)=>{
+            return listadoProductos[index].Producto.Categoria})
+    }
+    const imageLink = (selection)=>{
+        switch(selection){
+          case "Graficas":
+              return  "images/graphic.png";
+      
+          case "Procesador":
+              return "images/processor.png";
+      
+          case "Memoria":
+            return "images/memory.png";
+      
+          case "Almacenamiento":
+            return "images/storage.png";
+      
+          case "Cooler":
+            return "images/cooler.png";
+      
+          case "Windows":
+            return "images/windows.png";
+            
+          case "Power":
+            return "images/power.png";
+        }
+      }
     console.log(getProductosNombre())
     console.log(getProductosPrecio())
     console.log(getProductosPrecio()[0]+getProductosPrecio()[1])
@@ -95,14 +125,14 @@ const calculateTotalPrice=(precio)=>{
     </span>
 }
 
-const printItems=(nombre,precio)=>{
+const printItems=(nombre,precio,categoria)=>{
     possibleCheckoutItems.length=0;
     let selectionArray = calculateOption();
     for(let i=0;i<7;i++){
         let item={};
         item.name=nombre[i];
         item.price=precio[i];
-        item.img=allItems[i][selectionArray[i]].img;
+        item.img=imageLink(categoria[i]);
         item.order=orderNum;
         possibleCheckoutItems.push(item);
     console.log(`item:${allItems[i][selectionArray[i]].img}`)
@@ -115,7 +145,7 @@ const printItems=(nombre,precio)=>{
     const Items= Array(7).fill(0).map((_,index)=>{
     
     return <BComponentCol
-        img={allItems[index][selectionArray[index]].img}
+        img={imageLink(categoria[index])}
         name={nombre[index]}
         price={precio[index]}
         key={`${index}`}/>
@@ -168,7 +198,7 @@ const printItems=(nombre,precio)=>{
         <div className="col-7" id="mobile-brecommend-col2">
             <h2 style={{marginBottom:"50px"}}>Components</h2>
             <div id="beginner-components-grid" style={{backgroundColor:"rgba(0, 0, 0, 0.5)",padding: "30px",borderRadius:"20px"}}>
-                {printItems(getProductosNombre(),getProductosPrecio())}
+                {printItems(getProductosNombre(),getProductosPrecio(),getProductosCategoria())}
             </div>
         </div>
     </div>

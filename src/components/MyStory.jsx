@@ -2,12 +2,12 @@ import React, { useState } from "react";
 
 const MyStory = ()=>{
     const segment = (title,desc,img) =>{
-        return <div style={{diplay:"flex",flexDirection:"column",justifyContent:"center",marginTop:"50px",marginLeft:"50px",alignItems:"center"}}>
-            <h3 style={{textAlign:"center"}}>{title}</h3>
-            <div style={{backgroundColor:"#ce93d8",borderRadius:"20px",width:"200px",height:"200px",color:"transparent",marginRight:"auto",marginLeft:"auto",marginBottom:"40px",overflow:"hidden",marginTop:"30px",filter:"drop-shadow(1px 1px 10px cyan"}}>
+        return <div style={{diplay:"flex",flexDirection:"column",justifyContent:"center",marginTop:"50px",marginLeft:"50px",alignItems:"center",backgroundColor:"white",borderRadius:"25px"}}>
+            <h3 style={{textAlign:"center",color:"black",width:"80%",marginTop:"20px",marginRight:"auto",marginLeft:"auto"}}>{title}</h3>
+            <div style={{backgroundColor:"#ce93d8",borderRadius:"20px",width:"250px",height:"200px",color:"transparent",marginRight:"auto",marginLeft:"auto",marginBottom:"20px",overflow:"hidden",marginTop:"40px",filter:"drop-shadow(1px 1px 10px purple"}}>
                 <img style={{objectFit:"contain",height:"100%"}} src={`images/${img}.png`}/>
             </div>
-            <div style={{borderRadius:"20px",color:"white",padding:"20px",width:"250px",textAlign:"justify",textJustify:"interWord",backgroundColor:"rgba(0, 0, 0, 0.2)"}}>
+            <div style={{borderRadius:"20px",color:"black",padding:"20px",width:"350px",textAlign:"justify",textJustify:"interWord"}}>
                 {desc}
             </div>
         </div>

@@ -5,6 +5,7 @@ import {useState} from 'react';
 import { BrowserRouter,Route,Routes } from "react-router-dom";
 import BeginnerRecommendation from "./BeginnerRecommendation";
 import { useEffect } from "react";
+import { RUTA_BACKEND } from "../conf";
 const BeginnerOptions = (props) =>{
     let currentSelection="";
     let selection=0;
@@ -14,7 +15,7 @@ const BeginnerOptions = (props) =>{
     const [listadoProductos,setListadoProductos]=useState([]);
 
     const httpObtenerProductos = async () => {
-        const resp = await fetch(`http://localhost:9999/armados?tipo=${"coding"}`)
+        const resp = await fetch(`${RUTA_BACKEND}armados?tipo=${"coding"}`)
         const data = await resp.json()
         setListadoProductos(data)
     }

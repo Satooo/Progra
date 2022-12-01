@@ -32,6 +32,7 @@ const Search=()=>{
                     newItem.order=`${name}*`;
                     tempCart.push(newItem);
                     localStorage.setItem("possibleCheckoutItems",JSON.stringify(tempCart));
+                    alert("Agregado a carrito de compras")
                     }else{
                     let tempCart=[];
                     let newItem={};
@@ -40,8 +41,8 @@ const Search=()=>{
                     newItem.img=img;
                     newItem.order=`${name}*`;
                     tempCart.push(newItem);
-                    tempCart.push(newItem);
                     localStorage.setItem("possibleCheckoutItems",JSON.stringify(tempCart));
+                    alert("Agregado a carrito de compras")
                     }
                 }}>Add to cart</button>
                 </div>

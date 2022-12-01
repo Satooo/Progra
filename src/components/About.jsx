@@ -10,7 +10,9 @@ const About = ()=>{
 
 
     <p id="content-about-subText">OUR MISSION IS TO BUILD GAMING PCS AT THE BEST PRICE WITOUT CUTTING CORNERS.</p>
-    <a href="/story"><button id="content-about-button">LET'S BUILD</button></a>
+    <div style={{display:"flex",flexDirection:"column"}}>
+        <a href="/homepage"><button id="content-about-button">LET'S BUILD</button></a><a href="/story"><button id="content-story-button">Explore our features</button></a>
+    </div>
    </div>
    <div id="content-about-black">
     <div className="LogoPC">
