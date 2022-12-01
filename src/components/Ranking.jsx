@@ -17,7 +17,7 @@ const Ranking = () => {
     //console.log(pc);
 
     const httpObtenerRankingp = async () => {
-        const resp = await fetch(`http://localhost:9999/rankingp`);
+        const resp = await fetch(`${RUTA_BACKEND}rankingp`);
         const data = await resp.json();
         setlistadoRankingp(data);
     }
